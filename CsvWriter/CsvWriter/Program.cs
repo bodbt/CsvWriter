@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace CsvWriter
 {
@@ -11,13 +8,22 @@ namespace CsvWriter
     {
         static void Main(string[] args)
         {
-            DataLoader loader = new DataLoader();
+            try
+            {
+                DataLoader loader = new DataLoader();
+                DataTable dt = loader.GetDataFromSQLServer();
 
-            DataTable dt = loader.GetDataFromSQLServer();
+                CsvWriter writer = new CsvWriter();
+                writer.Write(dt);
 
-            CsvWriter writer = new CsvWriter();
-
-            writer.Write(dt);
+                Environment.Exit(0);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Thread.Sleep(3000);
+                Environment.Exit(1);
+            }
         }
     }
 }
